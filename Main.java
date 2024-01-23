@@ -10,8 +10,14 @@ public class Main {
 
         Scanner kb = new Scanner(System.in);
 
+        System.out.print("Enter upper bound: ");
         int upperBound = kb.nextInt();
-        System.out.print(upperBound);
+        System.out.print("Enter number of threads: ");
+        int threadsToUse = kb.nextInt();
+        kb.close();
+
+        Thread[] threads = new Thread[threadsToUse];          
+
         
         // for(int current_num = 2; current_num <= LIMIT; current_num++) {
         //     if(check_prime(current_num)) {
