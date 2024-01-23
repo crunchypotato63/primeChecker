@@ -16,7 +16,15 @@ public class Main {
         int threadsToUse = kb.nextInt();
         kb.close();
 
-        Thread[] threads = new Thread[threadsToUse];          
+        Thread[] threads = new Thread[threadsToUse];      
+        
+        long startTime = System.currentTimeMillis();
+
+        for (int i = 0; i < threadsToUse; i++) {
+            threads[i].start();
+        }
+
+        long endTime = System.currentTimeMillis();
 
         
         // for(int current_num = 2; current_num <= LIMIT; current_num++) {
