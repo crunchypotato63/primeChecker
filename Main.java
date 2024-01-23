@@ -11,7 +11,7 @@ public class Main {
         Scanner kb = new Scanner(System.in);
 
         int upperBound = kb.nextInt();
-        System.out.printf(upperBound);
+        System.out.print(upperBound);
         
         // for(int current_num = 2; current_num <= LIMIT; current_num++) {
         //     if(check_prime(current_num)) {
