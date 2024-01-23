@@ -34,7 +34,17 @@ public class Main {
         // }
 
         // System.out.printf("%d primes were found.\n",primes.size());
-    }    
+    } 
+
+    public static void findPrimesInRange(int start, int end) {
+        for (int currentNum = start; currentNum <= end; currentNum++) {
+            if (check_prime(currentNum)) {
+                synchronized (primes) {
+                    primes.add(currentNum);
+                }
+            }
+        }
+    }
 
     /*
     This function checks if an integer n is prime.
