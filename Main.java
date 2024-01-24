@@ -2,41 +2,76 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
+
+
 public class Main {
     private static final int LIMIT = 10000000;
 
+    public static class myThread extends Thread implements Runnable{
+    //needs to be static, compiler complains otherwise. trying to find out why
+        int start;
+        int end;
+        List<Integer> primes;
+
+        public myThread(int start, int end, List<Integer> primes){
+            this.start = start;
+            this.end = end;
+            this.primes = primes;
+        }
+
+        @Override
+        public void run(){
+            findPrimesInRange(start, end, primes);
+        }
+    }
+
     public static void main(String[] args) {
         List<Integer> primes = new ArrayList<Integer>();
-
+        int threadsToUse = 1;
         Scanner kb = new Scanner(System.in);
 
         System.out.print("Enter upper bound: ");
         int upperBound = kb.nextInt();
         System.out.print("Enter number of threads: ");
-        int threadsToUse = kb.nextInt();
+        threadsToUse = kb.nextInt();
         kb.close();
 
-        Thread[] threads = new Thread[threadsToUse];      
+        myThread[] threads = new myThread[threadsToUse];    
+        
+        int range = (upperBound-1)/threadsToUse;
         
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < threadsToUse; i++) {
+
+            int start = (i+1)*range-range+2; //i+1 to avoid 0, *range to move to correct range, -range to get to start of range, +2 to avoid starting at 1
+            int end = start+range-1;
+            // System.out.println("thread number " + i);
+            // System.out.println(start);
+            // System.out.println(end);
+
+            threads[i] = new myThread(start, end, primes);
             threads[i].start();
+        }
+
+        for (int i = 0; i < threadsToUse; i++) {
+            try {
+                threads[i].join(); //waits for all threads to be done before logging the end time below
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         long endTime = System.currentTimeMillis();
 
         
-        // for(int current_num = 2; current_num <= LIMIT; current_num++) {
-        //     if(check_prime(current_num)) {
-        //         primes.add(current_num);
-        //     }
-        // }
 
-        // System.out.printf("%d primes were found.\n",primes.size());
+        System.out.printf("%d primes were found.\n",primes.size());
+        System.out.printf("Runtime: %d", endTime-startTime);
     } 
 
-    public static void findPrimesInRange(int start, int end) {
+    public static void findPrimesInRange(int start, int end, List<Integer> primes) {
         for (int currentNum = start; currentNum <= end; currentNum++) {
             if (check_prime(currentNum)) {
                 synchronized (primes) {
