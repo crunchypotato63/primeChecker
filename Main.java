@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Main {
     private static final int LIMIT = 10000000;
 
-    public static class myThread extends Thread implements Runnable{
+    public static class myThread extends Thread{
     //needs to be static, compiler complains otherwise. trying to find out why
         int start;
         int end;
@@ -29,24 +29,26 @@ public class Main {
     public static void main(String[] args) {
         List<Integer> primes = new ArrayList<Integer>();
         int threadsToUse = 1;
+        int upperBound = LIMIT;
         Scanner kb = new Scanner(System.in);
 
         System.out.print("Enter upper bound: ");
-        int upperBound = kb.nextInt();
+        upperBound = kb.nextInt();
         System.out.print("Enter number of threads: ");
         threadsToUse = kb.nextInt();
         kb.close();
 
         myThread[] threads = new myThread[threadsToUse];    
         
-        int range = (upperBound-1)/threadsToUse;
+        int range = upperBound/threadsToUse;
+        
         
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < threadsToUse; i++) {
 
-            int start = (i+1)*range-range+2; //i+1 to avoid 0, *range to move to correct range, -range to get to start of range, +2 to avoid starting at 1
-            int end = start+range-1;
+            int start = (i+1)*range-range+1; //i+1 to avoid 0, *range to move to correct range, -range to get to start of range, +2 to avoid starting at 1
+            int end = (i == threadsToUse - 1) ? upperBound : start+range-1;
             // System.out.println("thread number " + i);
             // System.out.println(start);
             // System.out.println(end);
@@ -64,8 +66,6 @@ public class Main {
         }
 
         long endTime = System.currentTimeMillis();
-
-        
 
         System.out.printf("%d primes were found.\n",primes.size());
         System.out.printf("Runtime: %d", endTime-startTime);
@@ -90,11 +90,16 @@ public class Main {
     Returns true if n is prime, and false otherwise.
     */
     public static boolean check_prime(int n) {
+        if (n == 1){
+            return false;
+        }
+
         for(int i = 2; i * i <= n; i++) {
             if(n % i == 0) {
                 return false;
             }
         }
+        
         return true;
     }
 }
