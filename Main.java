@@ -9,7 +9,6 @@ public class Main {
     private static final int LIMIT = 10000000;
 
     public static class myThread extends Thread{
-    //needs to be static, compiler complains otherwise. trying to find out why
         int start;
         int end;
         List<Integer> primes;
@@ -47,11 +46,9 @@ public class Main {
 
         for (int i = 0; i < threadsToUse; i++) {
 
-            int start = (i+1)*range-range+1; //i+1 to avoid 0, *range to move to correct range, -range to get to start of range, +2 to avoid starting at 1
+            int start = (i+1)*range-range+1; 
             int end = (i == threadsToUse - 1) ? upperBound : start+range-1;
-            // System.out.println("thread number " + i);
-            // System.out.println(start);
-            // System.out.println(end);
+
 
             threads[i] = new myThread(start, end, primes);
             threads[i].start();
@@ -59,7 +56,7 @@ public class Main {
 
         for (int i = 0; i < threadsToUse; i++) {
             try {
-                threads[i].join(); //waits for all threads to be done before logging the end time below
+                threads[i].join(); 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
